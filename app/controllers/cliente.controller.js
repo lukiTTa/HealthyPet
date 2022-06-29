@@ -137,3 +137,14 @@ exports.deleteAll = (req, res) => {
       });
     });
 };
+
+exports.count = (req, res) => {
+  Cliente.count().then(count => {
+    res.send({ clientes: count });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: err.message || "Some error occurred!"
+    })
+  })
+}
