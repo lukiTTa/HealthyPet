@@ -136,3 +136,14 @@ exports.deleteAll = (req, res) => {
       });
     });
 };
+
+exports.count = (req, res) => {
+  Pet.count().then(count => {
+    res.send({ pets: count });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: err.message || "Some error occurred!"
+    })
+  })
+}

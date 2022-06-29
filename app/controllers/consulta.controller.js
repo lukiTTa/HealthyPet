@@ -1,8 +1,8 @@
 const db = require("../models");
-const Diagnostico = db.diagnostico;
+const Consulta = db.consulta;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Diagnostico
+// Create and Save a new Consulta
 exports.create = (req, res) => {
   // Validate request
   if (!req.body.pet) {
@@ -12,31 +12,31 @@ exports.create = (req, res) => {
     return;
   }
 
-  // Create a Diagnostico
-  const diagnostico = {
+  // Create a Consulta
+  const consulta = {
     data: req.body.data,
     pet: req.body.pet,
-    doenca: req.body.doenca,
-    comentarios: req.body.comentarios
+    motivo: req.body.motivo,
+    valor: req.body.valor
   };
 
-  // Save Diagnostico in the database
-  Diagnostico.create(diagnostico)
+  // Save Consulta in the database
+  Consulta.create(consulta)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Diagnostico."
+          err.message || "Some error occurred while creating the Consulta."
       });
     });
 };
 
-// Retrieve all Diagnosticos from the database.
+// Retrieve all Consultas from the database.
 exports.findAll = (req, res) => {
 
-  Diagnostico.findAll()
+  Consulta.findAll()
     .then(data => {
       res.send(data);
     })
@@ -48,85 +48,85 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Diagnostico with an id
+// Find a single Consulta with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Diagnostico.findByPk(id)
+  Consulta.findByPk(id)
     .then(data => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Diagnostico with id=${id}.`
+          message: `Cannot find Consulta with id=${id}.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error retrieving Diagnostico with id=" + id
+        message: "Error retrieving Consulta with id=" + id
       });
     });
 };
 
-// Update a Diagnostico by the id in the request
+// Update a Consulta by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Diagnostico.update(req.body, {
+  Consulta.update(req.body, {
     where: { id: id }
   })
     .then(num => {
       if (num == 1) {
         res.send({
-          message: "Diagnostico was updated successfully."
+          message: "Consulta was updated successfully."
         });
       } else {
         res.send({
-          message: `Cannot update Diagnostico with id=${id}. Maybe Diagnostico was not found or req.body is empty!`
+          message: `Cannot update Consulta with id=${id}. Maybe Consulta was not found or req.body is empty!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating Diagnostico with id=" + id
+        message: "Error updating Consulta with id=" + id
       });
     });
 };
 
-// Delete a Diagnostico with the specified id in the request
+// Delete a Consulta with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Diagnostico.destroy({
+  Consulta.destroy({
     where: { id: id }
   })
     .then(num => {
       if (num == 1) {
         res.send({
-          message: "Diagnostico was deleted successfully!"
+          message: "Consulta was deleted successfully!"
         });
       } else {
         res.send({
-          message: `Cannot delete Diagnostico with id=${id}. Maybe Diagnostico was not found!`
+          message: `Cannot delete Consulta with id=${id}. Maybe Consulta was not found!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete Diagnostico with id=" + id
+        message: "Could not delete Consulta with id=" + id
       });
     });
 };
 
-// Delete all Diagnosticos from the database.
+// Delete all Consultas from the database.
 exports.deleteAll = (req, res) => {
-  Diagnostico.destroy({
+  Consulta.destroy({
     where: {},
     truncate: false
   })
     .then(nums => {
-      res.send({ message: `${nums} Diagnosticos were deleted successfully!` });
+      res.send({ message: `${nums} Consultas were deleted successfully!` });
     })
     .catch(err => {
       res.status(500).send({
@@ -137,8 +137,8 @@ exports.deleteAll = (req, res) => {
 };
 
 exports.count = (req, res) => {
-  Diagnostico.count().then(count => {
-    res.send({ diagnosticos: count });
+  Consulta.count().then(count => {
+    res.send({ consultas: count });
   })
   .catch(err => {
     res.status(500).send({
