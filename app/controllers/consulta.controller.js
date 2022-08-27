@@ -1,145 +1,144 @@
 const db = require("../models");
-const Pet = db.pets;
+const Consulta = db.consulta;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Pet
+// Create and Save a new Consulta
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.nome) {
+  if (!req.body.pet) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
     return;
   }
 
-  // Create a Pet
-  const pet = {
-    nome: req.body.nome,
-    tipo: req.body.tipo,
-    idade: req.body.idade
+  // Create a Consulta
+  const consulta = {
+    data: req.body.data,
+    pet: req.body.pet,
+    motivo: req.body.motivo,
+    valor: req.body.valor
   };
 
-  // Save Pet in the database
-  Pet.create(pet)
+  // Save Consulta in the database
+  Consulta.create(consulta)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Pet."
+          err.message || "Some error occurred while creating the Consulta."
       });
     });
 };
 
-// Retrieve all Clientes from the database.
+// Retrieve all Consultas from the database.
 exports.findAll = (req, res) => {
-  const nome = req.query.nome;
-  var condition = nome ? { nome: { [Op.iLike]: `%${nome}%` } } : null;
 
-  Pet.findAll({ where: condition })
+  Consulta.findAll()
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving pets."
+          err.message || "Some error occurred while retrieving diagnosticos."
       });
     });
 };
 
-// Find a single Pet with an id
+// Find a single Consulta with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Pet.findByPk(id)
+  Consulta.findByPk(id)
     .then(data => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Pet with id=${id}.`
+          message: `Cannot find Consulta with id=${id}.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error retrieving Pet with id=" + id
+        message: "Error retrieving Consulta with id=" + id
       });
     });
 };
 
-// Update a Pet by the id in the request
+// Update a Consulta by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Pet.update(req.body, {
+  Consulta.update(req.body, {
     where: { id: id }
   })
     .then(num => {
       if (num == 1) {
         res.send({
-          message: "Pet was updated successfully."
+          message: "Consulta was updated successfully."
         });
       } else {
         res.send({
-          message: `Cannot update Pet with id=${id}. Maybe Pet was not found or req.body is empty!`
+          message: `Cannot update Consulta with id=${id}. Maybe Consulta was not found or req.body is empty!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating Pet with id=" + id
+        message: "Error updating Consulta with id=" + id
       });
     });
 };
 
-// Delete a Pet with the specified id in the request
+// Delete a Consulta with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Pet.destroy({
+  Consulta.destroy({
     where: { id: id }
   })
     .then(num => {
       if (num == 1) {
         res.send({
-          message: "Pet was deleted successfully!"
+          message: "Consulta was deleted successfully!"
         });
       } else {
         res.send({
-          message: `Cannot delete Pet with id=${id}. Maybe Pet was not found!`
+          message: `Cannot delete Consulta with id=${id}. Maybe Consulta was not found!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete Pet with id=" + id
+        message: "Could not delete Consulta with id=" + id
       });
     });
 };
 
-// Delete all Clientes from the database.
+// Delete all Consultas from the database.
 exports.deleteAll = (req, res) => {
-  Pet.destroy({
+  Consulta.destroy({
     where: {},
     truncate: false
   })
     .then(nums => {
-      res.send({ message: `${nums} Clientes were deleted successfully!` });
+      res.send({ message: `${nums} Consultas were deleted successfully!` });
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all pets."
+          err.message || "Some error occurred while removing all diagnosticos."
       });
     });
 };
 
 exports.count = (req, res) => {
-  Pet.count().then(count => {
-    res.send({ pets: count });
+  Consulta.count().then(count => {
+    res.send({ consultas: count });
   })
   .catch(err => {
     res.status(500).send({
